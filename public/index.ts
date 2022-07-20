@@ -1,4 +1,4 @@
-const APIKey : string = "fb5de8d331af42bdb95152039222606";
+const APIKey : string = "";
 
 type locationType = { latitude : number, longitude : number};
 type formData = 
