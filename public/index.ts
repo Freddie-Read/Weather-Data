@@ -1,4 +1,4 @@
-const APIKey : string = "<API Key Here>";
+const APIKey : string = "fb5de8d331af42bdb95152039222606";
 
 type locationType = { latitude : number, longitude : number};
 type formData = 
@@ -17,35 +17,23 @@ btn.addEventListener("click", function() : void
 {
     var location : string[] = input.value.split(",")
 
-    callAjax({ latitude : +location[0], longitude : +location[1]});    
+    fetchData({ latitude : +location[0], longitude : +location[1]});    
 })
 
-function callAjax(currLocation : locationType)
+async function fetchData(currLocation : locationType)
 {
-    var req = new XMLHttpRequest();
-
-    var reqString : string = `http://api.weatherapi.com/v1/current.json?key=${APIKey}&q=${currLocation.latitude},${currLocation.longitude}`;
-
-    req.open("GET", reqString);
-
-    req.onload = function()
-    {
-        var data = JSON.parse(req.responseText);
+    let response : any = await fetch(`http://api.weatherapi.com/v1/current.json?key=${APIKey}&q=${currLocation.latitude},${currLocation.longitude}`);
+    let data : any = await response.json();
         
-        let currWeather : formData = 
-        {
-            name : data.location.name, region : data.location.region, latitude : data.location.lat, longitude : data.location.lon, localTime : data.location.localtime,
-            temp : data.current.temp_c, isDay : data.current.is_day, 
-            text : data.current.condition.text, icon : data.current.condition.icon,
-            feelsLike : data.current.feelslike_c
-        };
-
-        console.log(currWeather.icon);
-
-        renderHTML(currWeather);        
-    }
-    
-    req.send();
+    let currWeather : formData = 
+    {
+        name : data.location.name, region : data.location.region, latitude : data.location.lat, longitude : data.location.lon, localTime :data.location.localtime,
+        temp : data.current.temp_c, isDay : data.current.is_day, 
+        text : data.current.condition.text, icon : data.current.condition.icon,
+        feelsLike : data.current.feelslike_c
+    };
+    console.log(currWeather.icon);
+    renderHTML(currWeather);        
 }
     
 function renderHTML(currWeather : formData)
